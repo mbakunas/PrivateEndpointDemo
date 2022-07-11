@@ -1,6 +1,6 @@
 name: NetworkDeploy
 env:
-  subscriptionId: ${{ AZURE_SUB_ID }}
+  subscriptionId: ${{ secrets.AZURE_SUB_ID }}
   azureRegion: East US 2
   templateFile: ./Network/main.bicep
   parametersFile: ./Network/main.parameters.jsonc
