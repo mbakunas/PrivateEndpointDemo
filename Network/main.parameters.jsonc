@@ -1,0 +1,103 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "resourceGroup_location": {
+            "value": "eastus"
+        },
+        "vnets": {
+            "value": [
+                {
+                    // hub VNet
+                    "resourceGroup": {
+                        "name": "NetworkDeployHub01",
+                        "tags": {
+                            "environment": "sandbox"
+                        }
+                    },
+                    "name": "VNet-HUB-EastUS-01",
+                    "addressSpace": "10.0.0.0/22",
+                    "subnets": [
+                        {
+                            "name": "GatewaySubnet",
+                            "addressSpace": "10.0.0.0/26"
+                        },
+                        {
+                            "name": "AzureBastionSubnet",
+                            "addressSpace": "10.0.0.128/26",
+                            "serviceBastion": {
+                                "name": "NetworkDeployHub01-Bastion"
+                            }
+                        },
+                        {
+                            "name": "Infra-10.0.1.0_24",
+                            "addressSpace": "10.0.1.0/24",
+                            "nsgName": "Infra-10.0.1.0_24-NSG"
+                        },
+                        {
+                            "name": "PrivateLink-10.0.2.0_24",
+                            "addressSpace": "10.0.2.0/24",
+                            "nsgName": "Infra-10.0.2.0_24-NSG"
+                        }
+                    ]
+                },
+                {
+                    // spoke 1 VNet
+                    "resourceGroup": {
+                        "name": "NetworkDeploySpoke01",
+                        "tags": {
+                            "environment": "sandbox"
+                        }
+                    },
+                    "name": "VNet-SPOKE-EastUS-01",
+                    "addressSpace": "10.1.0.0/16",
+                    "subnets": [
+                        {
+                            "name": "appGW-10.1.1.0_24",
+                            "addressSpace": "10.1.1.0/24",
+                            "nsgName": "appGW-10.1.1.0_24-NSG"
+                        },
+                        {
+                            "name": "App01-10.1.2.0_24",
+                            "addressSpace": "10.1.2.0/24",
+                            "nsgName": "App01-10.1.2.0_24-NSG"
+                        },
+                        {
+                            "name": "App02-10.1.3.0_24",
+                            "addressSpace": "10.1.3.0/24",
+                            "nsgName": "App02-10.1.3.0_24-NSG"
+                        }
+                    ]
+                },
+                {
+                    // spoke 2 VNet
+                    "resourceGroup": {
+                        "name": "NetworkDeploySpoke02",
+                        "tags": {
+                            "environment": "sandbox"
+                        }
+                    },
+                    "name": "VNet-SPOKE-EastUS-01",
+                    "addressSpace": "10.2.0.0/16",
+                    "subnets": [
+                        {
+                            "name": "appGW-10.2.1.0_24",
+                            "addressSpace": "10.2.1.0/24",
+                            "nsgName": "appGW-10.2.1.0_24-NSG"
+                        },
+                        {
+                            "name": "App01-10.2.2.0_24",
+                            "addressSpace": "10.2.2.0/24",
+                            "nsgName": "App01-10.2.2.0_24-NSG"
+                        },
+                        {
+                            "name": "App02-10.2.3.0_24",
+                            "addressSpace": "10.2.3.0/24",
+                            "nsgName": "App02-10.2.3.0_24-NSG"
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
