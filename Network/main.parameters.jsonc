@@ -6,13 +6,7 @@
             "value": [
                 {
                     // hub VNet
-                    "resourceGroup": {
-                        "name": "NetworkDeployHub01",
-                        "tags": {
-                            "environment": "sandbox"
-                        }
-                    },
-                    "name": "VNet-HUB-EastUS-01",
+                    "name": "VNet-HUB-EastUS2-01",
                     "addressSpace": "10.0.0.0/22",
                     "subnets": [
                         {
@@ -40,13 +34,7 @@
                 },
                 {
                     // spoke 1 VNet
-                    "resourceGroup": {
-                        "name": "NetworkDeploySpoke01",
-                        "tags": {
-                            "environment": "sandbox"
-                        }
-                    },
-                    "name": "VNet-SPOKE-EastUS-01",
+                    "name": "VNet-SPOKE-EastUS2-01",
                     "addressSpace": "10.1.0.0/16",
                     "subnets": [
                         {
@@ -68,13 +56,7 @@
                 },
                 {
                     // spoke 2 VNet
-                    "resourceGroup": {
-                        "name": "NetworkDeploySpoke02",
-                        "tags": {
-                            "environment": "sandbox"
-                        }
-                    },
-                    "name": "VNet-SPOKE-EastUS-01",
+                    "name": "VNet-SPOKE-EastUS2-02",
                     "addressSpace": "10.2.0.0/16",
                     "subnets": [
                         {
