@@ -132,6 +132,7 @@
         "storageAccount_encryptionEnabled": true,
         "storageAccount_publicNetworkAccess": "Disabled",
         "endpoint_name": "[concat(parameters('storageAccount_name'), '-endpoint')]",
+        "endpoint_connectionName": "[concat(parameters('storageAccount_name'), uniqueString(parameters('storageAccount_name')))]",
         "endpoint_subnetId": "[resourceId(parameters('endpoint_vnetRg'), 'Microsoft.Network/virtualNetworks/subnets', parameters('endpoint_vnetName'), parameters('endpoint_subnetName'))]",
         "endpoint_vnetId": "[resourceId(parameters('endpoint_vnetRg'), 'Microsoft.Network/virtualNetworks', parameters('endpoint_vnetName'))]",
         "endpoint_services": [
@@ -199,7 +200,7 @@
                 },
                 "privateLinkServiceConnections": [
                     {
-                        "name": "[variables('endpoint_name')]",
+                        "name": "[variables('endpoint_connectionName')]",
                         "properties": {
                             "privateLinkServiceId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount_name'))]",
                             "groupIds": "[variables('endpoint_services')]"
