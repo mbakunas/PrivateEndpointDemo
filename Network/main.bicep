@@ -71,6 +71,7 @@ module services 'Modules/services.bicep' = [for (vnet, i) in vnets: {
   params: {
     vnet: vnet
     location: azureResource_location
+    resourceGroup_name: resrouceGroup_name
   }
 }]
 
