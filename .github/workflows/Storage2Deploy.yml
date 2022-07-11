@@ -2,7 +2,7 @@ name: Storage2Deploy
 env:
   subscriptionId: ${{ secrets.AZURE_SUB_ID }}
   azureRegion: East US 2
-  templateFile: ./Storage2/privateStorageAccount.json
+  templateFile: ./Storage2/privateStorageAccount.bicep
   parametersFile: ./Storage2/privateStorageAccount.parameters.jsonc
   resrouceGroup: PrivateEndpointDemo04
 
