@@ -186,6 +186,47 @@
             }
         },
 
+        // nic
+        {
+            "name": "nestedDeployment1",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01",
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "resources": [
+                            {
+                                "name": "[concat(variables('endpoint_name'), '-NIC')]",
+                                "type": "Microsoft.Network/networkInterfaces",
+                                "apiVersion": "2020-11-01",
+                                "location": "[resourceGroup().location]",
+                                "properties": {
+                                    "ipConfigurations": [
+                                        {
+                                            "name": "ipConfig1",
+                                            "properties": {
+                                                "privateIPAllocationMethod": "Dynamic",
+                                                "subnet": {
+                                                    "id": "[variables('endpoint_subnetId')]"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                    "outputs": {
+                        "ipAddress": {
+                            "type": "string",
+                            "value": "[reference(resourceId('Microsoft.Network/networkInterfaces', concat(variables('endpoint_name'), '-NIC'))).ipConfigurations[0].properties.privateIPAddress]"
+                        }
+                    }
+                }
+            }
+        },
+
         // Private endpoint
         {
             "name": "[variables('endpoint_name')]",
@@ -211,26 +252,26 @@
                 "customNetworkInterfaceName": "[concat(variables('endpoint_name'), '-NIC')]"
                 //"networkInterfaces": []
             }
-        },
+        }
 
         // DNS records
-        {
-            "type": "Microsoft.Network/dnsZones/A",
-            "name": "[concat(variables('blobPrivateDnsZoneName'), '/', parameters('storageAccount_name'))]",
-            "apiVersion": "2018-05-01",
-            "location": "global",
-            "dependsOn": [
-                "[variables('endpoint_name')]"
-            ],
-            "properties": {
-                "TTL": 3600,
-                "Arecords": [
-                    {
-                        "ipv4Address": "[reference(resourceId('Microsoft.Network/privateEndpoints', variables('endpoint_name')), '2021-05-01').networkInterfaces[0].id.ipConfigurations[0].properties.privateIPAddress]"
-                    }
-                ]
-            }
-        }
+        // {
+        //     "type": "Microsoft.Network/dnsZones/A",
+        //     "name": "[concat(variables('blobPrivateDnsZoneName'), '/', parameters('storageAccount_name'))]",
+        //     "apiVersion": "2018-05-01",
+        //     "location": "global",
+        //     "dependsOn": [
+        //         "[variables('endpoint_name')]"
+        //     ],
+        //     "properties": {
+        //         "TTL": 3600,
+        //         "Arecords": [
+        //             {
+        //                 "ipv4Address": "[reference(resourceId('Microsoft.Network/privateEndpoints', variables('endpoint_name')), '2021-05-01').networkInterfaces[0].id.ipConfigurations[0].properties.privateIPAddress]"
+        //             }
+        //         ]
+        //     }
+        // }
 
         // virtual network link for the dns zone
     ]
