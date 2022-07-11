@@ -228,25 +228,25 @@
         //     }
         // },
 
-        {
-            "name": "[variables('endpoint_nicName')]",
-            "type": "Microsoft.Network/networkInterfaces",
-            "apiVersion": "2020-11-01",
-            "location": "[resourceGroup().location]",
-            "properties": {
-                "ipConfigurations": [
-                    {
-                        "name": "ipConfig1",
-                        "properties": {
-                            "privateIPAllocationMethod": "Dynamic",
-                            "subnet": {
-                                "id": "[variables('endpoint_subnetId')]"
-                            }
-                        }
-                    }
-                ]
-            }
-        },
+        // {
+        //     "name": "[variables('endpoint_nicName')]",
+        //     "type": "Microsoft.Network/networkInterfaces",
+        //     "apiVersion": "2020-11-01",
+        //     "location": "[resourceGroup().location]",
+        //     "properties": {
+        //         "ipConfigurations": [
+        //             {
+        //                 "name": "ipConfig1",
+        //                 "properties": {
+        //                     "privateIPAllocationMethod": "Dynamic",
+        //                     "subnet": {
+        //                         "id": "[variables('endpoint_subnetId')]"
+        //                     }
+        //                 }
+        //             }
+        //         ]
+        //     }
+        // },
 
         // Private endpoint
         {
