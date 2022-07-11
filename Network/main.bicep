@@ -1,6 +1,6 @@
 targetScope = 'resourceGroup'
 
-param resrouceGroup_name string
+param resrouceGroup_name string = resourceGroup().name
 param azureResource_location string = resourceGroup().location
 
 param vnets array
