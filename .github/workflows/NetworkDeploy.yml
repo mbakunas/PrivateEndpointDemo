@@ -1,0 +1,43 @@
+name: NetworkDeploy
+env:
+  subscriptionId: ${{ AZURE_SUB_ID }}
+  azureRegion: East US 2
+  templateFile: ./Network/main.bicep
+  parametersFile: ./Network/main.parameters.jsonc
+  resrouceGroup: PrivateEndpointDemo01
+
+# Controls when the workflow will run
+on:
+  # Workflow will run on upon a commit
+  push:
+    branches:
+      - main
+    paths:
+      - "Network/**.bicep"
+      - "Network/**.jsonc"
+
+  # Workflow can be triggered manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - uses: Azure/login@v1
+        name: Login to Azure
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+      
+      - uses: Azure/arm-deploy@v1
+        name: Deploy bicep file
+        with:
+          scope: resourceGroup
+          deploymentName: 'Github.Actions-${{ github.workflow }}-${{ github.run_number }}'
+          subscriptionId: ${{ env.subscriptionId }}
+          resrouceGroup: ${{ env.resourceGroup }}
+          region: ${{ env.azureRegion }}
+          template: ${{ env.templateFile }}
+          parameters: ${{ env.parametersFile}}
