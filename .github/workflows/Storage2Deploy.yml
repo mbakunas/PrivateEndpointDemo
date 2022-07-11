@@ -1,0 +1,47 @@
+name: Storage2Deploy
+env:
+  subscriptionId: ${{ secrets.AZURE_SUB_ID }}
+  azureRegion: East US 2
+  templateFile: ./Storage2/privateStorageAccount.json
+  parametersFile: ./Storage2/privateStorageAccount.parameters.jsonc
+  resrouceGroup: PrivateEndpointDemo04
+
+# Controls when the workflow will run
+on:
+  # Workflow will run on upon a commit
+  push:
+    branches:
+      - main
+    paths:
+      - "Storage2/**.json"
+      - "Storage2/**.jsonc"
+
+  # Workflow can be triggered manually from the Actions tab
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - uses: Azure/login@v1
+        name: Login to Azure
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUB_ID }}
+      
+      - uses: Azure/arm-deploy@v1
+        name: Deploy bicep file
+        with:
+          scope: resourcegroup
+          deploymentName: 'Github.Actions-${{ github.workflow }}-${{ github.run_number }}'
+          subscriptionId: ${{ env.subscriptionId }}
+          resourceGroupName: ${{ env.resrouceGroup }}
+          region: ${{ env.azureRegion }}
+          template: ${{ env.templateFile }}
+          parameters: ${{ env.parametersFile}}
