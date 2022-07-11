@@ -207,8 +207,9 @@
                             "groupIds": "[variables('endpoint_services')]"
                         }
                     }
-                ]
-                //"customNetworkInterfaceName": "[concat(variables('endpoint_name'), '-NIC')]"
+                ],
+                "customNetworkInterfaceName": "[concat(variables('endpoint_name'), '-NIC')]"
+                //"networkInterfaces": []
             }
         },
 
@@ -225,7 +226,7 @@
                 "TTL": 3600,
                 "Arecords": [
                     {
-                        "ipv4Address": "[reference(resourceId('Microsoft.Network/privateEndpoints', variables('endpoint_name')), '2021-05-01').networkInterfaces[0].id]"
+                        "ipv4Address": "[reference(resourceId('Microsoft.Network/privateEndpoints', variables('endpoint_name')), '2021-05-01').networkInterfaces[0].id.ipConfigurations[0].properties.privateIPAddress]"
                     }
                 ]
             }
