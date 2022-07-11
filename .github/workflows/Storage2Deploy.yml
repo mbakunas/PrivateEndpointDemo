@@ -4,7 +4,7 @@ env:
   azureRegion: East US 2
   templateFile: ./Storage2/privateStorageAccount.bicep
   parametersFile: ./Storage2/privateStorageAccount.parameters.jsonc
-  resrouceGroup: PrivateEndpointDemo04
+  resrouceGroup: PrivateEndpointDemo05
 
 # Controls when the workflow will run
 on:
@@ -13,8 +13,8 @@ on:
     branches:
       - main
     paths:
-      - "Storage2/**.json"
       - "Storage2/**.bicep"
+      - "Storage2/**.json"
       - "Storage2/**.jsonc"
 
   # Workflow can be triggered manually from the Actions tab
