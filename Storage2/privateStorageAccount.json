@@ -1,0 +1,234 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "Azure region where resources will be deployed."
+            }
+        },
+        "storageAccount_name": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the storage account."
+            }
+        },
+        "storageAccount_skuName": {
+            "type": "string",
+            "metadata": {
+                "description": "Storage account SKU name."
+            },
+            "allowedValues": [
+                "Premium_LRS",
+                "Premium_ZRS",
+                "Standard_GRS",
+                "Standard_GZRS",
+                "Standard_LRS",
+                "Standard_RAGRS",
+                "Standard_RAGZRS",
+                "Standard_ZRS"
+            ]
+        },
+        "storageAccount_kind": {
+            "type": "string",
+            "metadata": {
+                "description": "Type of storage account"
+            },
+            "allowedValues": [
+                "BlobStorage",
+                "BlockBlobStorage",
+                "FileStorage",
+                "Storage",
+                "StorageV2"
+            ]
+        },
+        "storageAccount_accessTier": {
+            "type": "string",
+            "metadata": {
+                "description": "Performance tier of the storage account."
+            },
+            "allowedValues": [
+                "Cool",
+                "Hot",
+                "Premium"
+            ]
+        },
+        "storageAccount_supportsHttpsTrafficOnly": {
+            "type": "bool",
+            "metadata": {
+                "description": "Forces stroage to only accept https traffic."
+            }
+        },
+        "storageAccount_publicNetworkAccess": {
+            "type": "string",
+            "metadata": {
+                "description": "true = allow public network access to storage account"
+            }
+        },
+        "storageAccount_allowBlobPublicAccess": {
+            "type": "bool",
+            "metadata": {
+                "description": "true = allow public access to all blobs or containers in the storage account"
+            }
+        },
+        "storageAccount_allowSharedKeyAccess": {
+            "type": "bool",
+            "metadata": {
+                "description": "Enables storage account access via Shared Key"
+            }
+        },
+        "storageAccount_defaultOAuth": {
+            "type": "bool",
+            "metadata": {
+                "description": "Enables Azure RBAC data layer access control"
+            }
+        },
+        "storageAccount_isHnsEnabled": {
+            "type": "bool",
+            "metadata": {
+                "description": "Enables Hierarchical Namespace required for data lake storage"
+            }
+        },
+        "storageAccount_keySource": {
+            "type": "string",
+            "metadata": {
+                "description": "Sets Microsoft managed (Microsoft.Storage) or customer managed (Microsoft.Keyvault) key"
+            },
+            "allowedValues": [
+                "Microsoft.Keyvault",
+                "Microsoft.Storage"
+            ]
+        },
+        "storageAccount_infrastructureEncryptionEnabled": {
+            "type": "bool",
+            "metadata": {
+                "description": "true = t the service applies a secondary layer of encryption with platform managed keys for data at rest"
+            }
+        },
+        "endpoint_vnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "VNet where the subnet hosting the private endpoint resides"
+            }
+        },
+        "endpoint_subnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Subnet where the private endpoint resides"
+            }
+        },
+        "endpoint_vnetRg": {
+            "type": "string",
+            "metadata": {
+                "description": "Resource group where the VNet where the subnet hosting the private endpoint resides"
+            }
+        }
+
+    },
+    "functions": [],
+    "variables": {
+        "storageAccount_minimumTlsVersion": "TLS1_2",
+        "storageAccount_encryptionEnabled": true,
+        "storageAccount_publicNetworkAccess": "Disabled",
+        "endpoint_name": "[concat(parameters('storageAccount_name'), '-endpoint')]",
+        "endpoint_subnetId": "[resourceId(parameters('endpoint_vnetRg'), 'Microsoft.Network/virtualNetworks/subnets', parameters('endpoint_vnetName'), parameters('endpoint_subnetName'))]",
+        "endpoint_vnetId": "[resourceId(parameters('endpoint_vnetRg'), 'Microsoft.Network/virtualNetworks', parameters('endpoint_vnetName'))]",
+        "endpoint_services": [
+            "blob"
+        ],
+        "subnetDeploymentName": "[concat(deployment().name, '-endpointSubnet')]",
+        "blobPrivateDnsZoneName": "[concat('privatelink.blob.', environment().suffixes.storage)]"
+    },
+    "resources": [
+        {
+            "name": "[parameters('storageAccount_name')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2021-09-01",
+            "location": "[parameters('location')]",
+            "kind": "[parameters('storageAccount_kind')]",
+            "sku": {
+                "name": "[parameters('storageAccount_skuName')]"
+            },
+            "properties": {
+                "accessTier": "[parameters('storageAccount_accessTier')]",
+                "minimumTlsVersion": "[variables('storageAccount_minimumTlsVersion')]",
+                "storageAccount_supportsHttpsTrafficOnly": "[parameters('storageAccount_supportsHttpsTrafficOnly')]",
+                "storageAccount_publicNetworkAccess": "[parameters('storageAccount_publicNetworkAccess')]",
+                "allowBlobPublicAccess": "[parameters('storageAccount_allowBlobPublicAccess')]",
+                "allowSharedKeyAccess": "[parameters('storageAccount_allowSharedKeyAccess')]",
+                "defaultToOAuthAuthentication": "[parameters('storageAccount_defaultOAuth')]",
+                "isHnsEnabled": "[parameters('storageAccount_isHnsEnabled')]",
+                "publicNetworkAccess": "[variables('storageAccount_publicNetworkAccess')]",
+                "encryption": {
+                    "keySource": "[parameters('storageAccount_keySource')]",
+                    "services": {
+                        "blob": {
+                            "enabled": "[variables('storageAccount_encryptionEnabled')]",
+                            "keyType": "Account"
+                        },
+                        "file": {
+                            "enabled": "[variables('storageAccount_encryptionEnabled')]",
+                            "keyType": "Account"
+                        },
+                        "table": {
+                            "enabled": "[variables('storageAccount_encryptionEnabled')]",
+                            "keyType": "Account"
+                        },
+                        "queue": {
+                            "enabled": "[variables('storageAccount_encryptionEnabled')]",
+                            "keyType": "Account"
+                        }
+                    },
+                    "requireInfrastructureEncryption": "[parameters('storageAccount_infrastructureEncryptionEnabled')]"
+                }
+            }
+        },
+        // Private endpoint
+        {
+            "name": "[variables('endpoint_name')]",
+            "type": "Microsoft.Network/privateEndpoints",
+            "apiVersion": "2021-05-01",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[parameters('storageAccount_name')]"
+            ],
+            "properties": {
+                "subnet": {
+                    "id": "[variables('endpoint_subnetId')]"
+                },
+                "privateLinkServiceConnections": [
+                    {
+                        "name": "[variables('endpoint_name')]",
+                        "properties": {
+                            "privateLinkServiceId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount_name'))]",
+                            "groupIds": "[variables('endpoint_services')]"
+                        }
+                    }
+                ],
+                "customNetworkInterfaceName": "[concat(variables('endpoint_name'), '-NIC')]"
+            }
+        },
+
+        // DNS records
+        {
+            "type": "Microsoft.Network/dnsZones/A",
+            "name": "[concat(variables('blobPrivateDnsZoneName'), '/', parameters('storageAccount_name'))]",
+            "apiVersion": "2018-05-01",
+            "location": "global",
+            "dependsOn": [
+                "[variables('endpoint_name')]"
+            ],
+            "properties": {
+                "TTL": 3600,
+                "Arecords": [
+                    {
+                        "ipv4Address": "[reference(resourceId('Microsoft.Network/networkInterfaces', concat(variables('endpoint_name'), '-NIC')), '2021-05-01').networkInterfaces[0].id]"
+                    }
+                ]
+            }
+        }
+
+        // virtual network link for the dns zone
+    ]
+}

@@ -1,0 +1,54 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "eastus"
+        },
+        "storageAccount_name": {
+            "value": "privateendpointdemo02"
+        },
+        "storageAccount_skuName": {
+            "value": "Standard_ZRS"
+        },
+        "storageAccount_kind": {
+            "value": "StorageV2"
+        },
+        "storageAccount_accessTier": {
+            "value": "Hot"
+        },
+        "storageAccount_supportsHttpsTrafficOnly": {
+            "value": true
+        },
+        "storageAccount_publicNetworkAccess": {
+            "value": "Disabled"
+        },
+        "storageAccount_allowBlobPublicAccess": {
+            "value": false
+        },
+        "storageAccount_allowSharedKeyAccess": {
+            "value": true
+        },
+        "storageAccount_defaultOAuth": {
+            "value": true
+        },
+        "storageAccount_isHnsEnabled": {
+            "value": true
+        },
+        "storageAccount_keySource": {
+            "value": "Microsoft.Storage"
+        },
+        "storageAccount_infrastructureEncryptionEnabled": {
+            "value": true
+        },
+        "endpoint_vnetName": {
+            "value": "VNet-HUB-EastUS2-01"
+        },
+        "endpoint_subnetName": {
+            "value": "PrivateLink-10.0.2.0_24"
+        },
+        "endpoint_vnetRg": {
+            "value": "PrivateEndpointDemo01"
+        }
+    }
+}
