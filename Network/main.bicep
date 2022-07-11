@@ -56,7 +56,7 @@ module spoke2HubPeer 'Modules/VNetPeer.bicep' = [for i in range(1, length(vnets)
   params: {
     peer_LocalVnetName: vnets[i].name
     peer_ForeignVnetName: vnets[0].name  // hub VNet is first one deployed
-    peer_ForeighVnetResourceGroup: vnets[0].resourceGroup.name
+    peer_ForeighVnetResourceGroup: resrouceGroup_name
     peer_allowGatewayTransit: false
     peer_useRemoteGateways: false
   }
@@ -70,7 +70,7 @@ module services 'Modules/services.bicep' = [for (vnet, i) in vnets: {
   dependsOn: deployVNets
   params: {
     vnet: vnet
-    location: vnet.location
+    location: azureResource_location
   }
 }]
 

@@ -24,7 +24,7 @@ module bastion 'bastion.bicep' = [for subnet in vnet.subnets:  if ((contains(sub
   name: 'bastion-${subnet.name}'
   params: {
     bastion_name: subnet.serviceBastion.name
-    bastion_location: vnet.location
+    bastion_location: location
     bastion_vnetName: vnet.name
   }
 }]
