@@ -135,6 +135,7 @@
         "endpoint_connectionName": "[concat(parameters('storageAccount_name'), uniqueString(parameters('storageAccount_name')))]",
         "endpoint_subnetId": "[resourceId(parameters('endpoint_vnetRg'), 'Microsoft.Network/virtualNetworks/subnets', parameters('endpoint_vnetName'), parameters('endpoint_subnetName'))]",
         "endpoint_vnetId": "[resourceId(parameters('endpoint_vnetRg'), 'Microsoft.Network/virtualNetworks', parameters('endpoint_vnetName'))]",
+        "endpoint_nicName": "[concat(variables('endpoint_name'), '-NIC')]",
         "endpoint_services": [
             "file"
         ],
@@ -198,7 +199,7 @@
                     "contentVersion": "1.0.0.0",
                     "resources": [
                             {
-                                "name": "[concat(variables('endpoint_name'), '-NIC')]",
+                                "name": "[variables('endpoint_nicName')]",
                                 "type": "Microsoft.Network/networkInterfaces",
                                 "apiVersion": "2020-11-01",
                                 "location": "[resourceGroup().location]",
@@ -220,7 +221,7 @@
                     "outputs": {
                         "ipAddress": {
                             "type": "string",
-                            "value": "[reference(resourceId('Microsoft.Network/networkInterfaces', concat(variables('endpoint_name'), '-NIC'))).ipConfigurations[0].properties.privateIPAddress]"
+                            "value": "[reference(resourceId('Microsoft.Network/networkInterfaces', variables('endpoint_nicName'))).ipConfigurations[0].properties.privateIPAddress]"
                         }
                     }
                 }
@@ -249,8 +250,10 @@
                         }
                     }
                 ],
-                "customNetworkInterfaceName": "[concat(variables('endpoint_name'), '-NIC')]"
-                //"networkInterfaces": []
+                //"customNetworkInterfaceName": "[concat(variables('endpoint_name'), '-NIC')]"
+                "networkInterfaces": [
+                    "[resourceId('Microsoft.Network/networkInterfaces', variables('endpoint_nicName'))]"
+                ]
             }
         }
 
