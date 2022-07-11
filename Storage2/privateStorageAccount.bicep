@@ -91,10 +91,10 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2022-01-01' = {
     }
     privateLinkServiceConnections: [
       {
-        name: endpoint_serviceNames['blob'].connectionName
+        name: endpoint_name
         properties: {
           privateLinkServiceId: storage.id
-          groupIds: endpoint_serviceNames['blob'].groupIds
+          groupIds: endpoint_serviceNames.blob.groupIds
         }
       }
     ]
