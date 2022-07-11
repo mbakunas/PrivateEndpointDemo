@@ -136,10 +136,10 @@
         "endpoint_subnetId": "[resourceId(parameters('endpoint_vnetRg'), 'Microsoft.Network/virtualNetworks/subnets', parameters('endpoint_vnetName'), parameters('endpoint_subnetName'))]",
         "endpoint_vnetId": "[resourceId(parameters('endpoint_vnetRg'), 'Microsoft.Network/virtualNetworks', parameters('endpoint_vnetName'))]",
         "endpoint_services": [
-            "blob"
+            "file"
         ],
         "subnetDeploymentName": "[concat(deployment().name, '-endpointSubnet')]",
-        "blobPrivateDnsZoneName": "[concat('privatelink.blob.', environment().suffixes.storage)]"
+        "blobPrivateDnsZoneName": "[concat('privatelink.file.', environment().suffixes.storage)]"
     },
     "resources": [
         {
@@ -185,6 +185,7 @@
                 }
             }
         },
+
         // Private endpoint
         {
             "name": "[variables('endpoint_name')]",
@@ -206,8 +207,8 @@
                             "groupIds": "[variables('endpoint_services')]"
                         }
                     }
-                ],
-                "customNetworkInterfaceName": "[concat(variables('endpoint_name'), '-NIC')]"
+                ]
+                //"customNetworkInterfaceName": "[concat(variables('endpoint_name'), '-NIC')]"
             }
         },
 
