@@ -25,14 +25,14 @@ var endpoint_subnetId = resourceId(endpoint_vnetRg, 'Microsoft.Network/virtualNe
 var endpoint_serviceNames = {
   blob: {
     connectionName: '${endpoint_name}-blob-${uniqueString(endpoint_name)}'
-    privateDnsZoneName: 'privatelink.blob ${environment().suffixes.storage}'
+    privateDnsZoneName: 'privatelink.blob.${environment().suffixes.storage}'
     groupIds: [
       'blob'
     ]
   }
   file: {
     connectionName: '${endpoint_name}-file-${uniqueString(endpoint_name)}'
-    privateDnsZoneName: 'privatelink.file ${environment().suffixes.storage}'
+    privateDnsZoneName: 'privatelink.file.${environment().suffixes.storage}'
     groupIds: [
       'file'
     ]
