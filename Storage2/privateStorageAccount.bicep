@@ -102,4 +102,4 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2022-01-01' = {
   }
 }
 
-output ipAddress array = reference(resourceId('Microsoft.Network/privateEndpoints', endpoint_name), '2021-01-01').networkInterfaces[0].ipConfigurations
+output ipAddress array = reference(resourceId('Microsoft.Network/privateEndpoints', endpoint_name), '2021-01-01').networkInterfaces[0].id.properties.ipConfigurations
