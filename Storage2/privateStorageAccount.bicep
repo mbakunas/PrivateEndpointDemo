@@ -81,26 +81,22 @@ resource storage 'Microsoft.Storage/storageAccounts@2021-09-01' = {
   }
 }
 
-resource privateEndpoint 'Microsoft.Network/privateEndpoints@2022-01-01' = {
-  name: endpoint_name
-  location: location
-
-  properties: {
-    subnet: {
-      id: endpoint_subnetId
-    }
-    privateLinkServiceConnections: [
-      {
-        name: endpoint_name
-        properties: {
-          privateLinkServiceId: storage.id
-          groupIds: endpoint_serviceNames.blob.groupIds
-        }
-      }
-    ]
-    customNetworkInterfaceName: '${endpoint_name}-NIC'
+module privateEndpoint 'Modules/PrivateEndpoint.bicep' = {
+  name: '${deployment().name}-privateEndpoint'
+  params: {
+    endpoint_location: location
+    endpoint_resourceResourceId: storage.id
+    endpoint_resourceName: storageAccount_name
+    endpoint_subnetId: endpoint_subnetId
+    endpoint_groupId: endpoint_serviceNames.file.groupIds
   }
 }
 
-output NIC array = reference(resourceId('Microsoft.Network/privateEndpoints', endpoint_name), '2021-01-01').networkInterfaces[0]
-output ipAddress string = reference(resourceId('Microsoft.Network/networkInterfaces',  '${endpoint_name}-NIC')).properties.ipConfigurations[0].properties.privateIPAddress
+module dnsArecord 'Modules/Arecord.bicep' = {
+  name: '${deployment().name}-dnsArecord'
+  params: {
+    dns_endpointNicId: privateEndpoint.outputs.networkInterfaceId
+    dns_recordName: storageAccount_name
+    dns_zoneName: endpoint_serviceNames.file.privateDnsZoneName
+  }
+}
