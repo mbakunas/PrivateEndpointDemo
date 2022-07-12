@@ -17,6 +17,7 @@ param storageAccount_infrastructureEncryptionEnabled bool
 param endpoint_vnetName string
 param endpoint_subnetName string
 param endpoint_vnetRg string
+param dns_zoneRG string
 
 var storageAccount_minimumTlsVersion = 'TLS1_2'
 var storageAccount_encryptionEnabled = true
@@ -94,6 +95,7 @@ module privateEndpoint 'Modules/PrivateEndpoint.bicep' = {
 
 module dnsArecord 'Modules/Arecord.bicep' = {
   name: '${deployment().name}-dnsArecord'
+  scope: resourceGroup(dns_zoneRG)
   params: {
     dns_endpointNicId: privateEndpoint.outputs.networkInterfaceId
     dns_recordName: storageAccount_name

@@ -49,6 +49,9 @@
         },
         "endpoint_vnetRg": {
             "value": "PrivateEndpointDemo01"
+        },
+        "dns_zoneRG": {
+            "value": "PrivateEndpointDemo02"
         }
     }
 }
