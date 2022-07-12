@@ -102,4 +102,5 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2022-01-01' = {
   }
 }
 
-output ipAddress array = reference(resourceId('Microsoft.Network/privateEndpoints', endpoint_name), '2021-01-01').networkInterfaces[0].id.properties.ipConfigurations
+output NIC array = reference(resourceId('Microsoft.Network/privateEndpoints', endpoint_name), '2021-01-01').networkInterfaces[0]
+output ipAddress string = reference(resourceId('Microsoft.Network/networkInterfaces',  '${endpoint_name}-NIC')).properties.ipConfigurations[0].properties.privateIPAddress
