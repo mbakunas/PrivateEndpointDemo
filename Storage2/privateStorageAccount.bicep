@@ -101,3 +101,5 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2022-01-01' = {
     customNetworkInterfaceName: '${endpoint_name}-NIC'
   }
 }
+
+output ipAddress string = reference(resourceId('Microsoft.Network/privateEndpoints', endpoint_name), '2021-01-01').networkInterfaces
